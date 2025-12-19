@@ -1,3 +1,11 @@
+---
+type: command
+description: Run comprehensive validation suite for tests, type checks, linting, and deployments
+tags: [validation, testing, quality-assurance, ci]
+---
+
+# Validate Command
+
 Run comprehensive validation of the project to ensure all tests, type checks, linting, and deployments are working correctly.
 
 Execute the following commands in sequence and report results:

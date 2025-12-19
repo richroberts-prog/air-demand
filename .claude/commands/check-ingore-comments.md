@@ -1,7 +1,18 @@
+---
+type: command
+description: Audit all type suppressions and linting ignores, provide resolution recommendations
+tags: [code-quality, type-safety, technical-debt]
+---
+
+# Check Ignore Comments Command
+
 Find all noqa/type:ignore comments in the codebase, investigate why they exist, and provide recommendations for resolution or justification.
 
 Create a markdown report file (create the reports directory if not created yet): `.agents/reports/ignore-comments-report-{YYYY-MM-DD}.md`
-report:
+
+## Report Format
+
+For each suppression found, create a section in the report:
 
 **Why it exists:**
 {explanation of why the suppression was added}

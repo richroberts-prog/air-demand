@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
+**Air Demand** - Recruiting intelligence platform for elite headhunters. Continuously discovers, qualifies, and surfaces high-quality opportunities from Paraform marketplace.
+
 FastAPI + PostgreSQL application using **vertical slice architecture**, optimized for AI-assisted development. Python 3.12+, strict type checking with MyPy and Pyright.
+
+**Core domains:** demand (job opportunities), enrichment (company intelligence), qualification (Q1/Q2 gates), scoring (profitability calculations), digest (daily delivery).
 
 ## Core Principles
 
@@ -19,7 +23,7 @@ FastAPI + PostgreSQL application using **vertical slice architecture**, optimize
 **Vertical Slice Architecture**
 
 - Each feature owns its database models, schemas, routes, and business logic
-- Features live in separate directories directly under `app/` (e.g., `app/products/`, `app/orders/`)
+- Features live in separate directories directly under `app/` (e.g., `app/demand/`, `app/enrichment/`, `app/qualification/`)
 - Shared utilities go in `app/shared/` only when used by 3+ features
 - Core infrastructure (`app/core/`) is shared across all features
 
@@ -36,7 +40,7 @@ FastAPI + PostgreSQL application using **vertical slice architecture**, optimize
 
 - Structured logging: Use `domain.component.action_state` pattern
   - Format: `{domain}.{component}.{action}_{state}`
-  - Examples: `user.registration_started`, `product.create_completed`, `database.health_check_failed`
+  - Examples: `demand.scraping_started`, `qualification.q1_gate_completed`, `enrichment.company_research_completed`
   - See `docs/standards/logging-standard.md` for complete event taxonomy
 - Request correlation: All logs include `request_id` automatically via context vars
 - Consistent naming: Predictable patterns for AI code generation
@@ -121,7 +125,7 @@ app/
 ├── core/           # Infrastructure (config, database, logging, middleware, health, exceptions)
 ├── shared/         # Cross-feature utilities (pagination, timestamps, error schemas)
 ├── main.py         # FastAPI application entry point
-└── <features>/     # Feature slices directly here (e.g., products/, orders/)
+└── <features>/     # Feature slices directly here (e.g., demand/, enrichment/, qualification/)
 ```
 
 ### Database
@@ -153,7 +157,7 @@ app/
 - Exception logging: Always use `exc_info=True` for stack traces
 
 **Event Pattern:** `{domain}.{component}.{action}_{state}`
-- Examples: `user.registration_completed`, `database.connection_initialized`, `request.http_received`
+- Examples: `demand.scraping_completed`, `qualification.q2_gate_failed`, `scoring.profitability_calculated`
 - **Complete taxonomy and guidelines:** See `docs/standards/logging-standard.md`
 
 **Middleware**
@@ -229,7 +233,7 @@ tags: [string]             # discovery keywords
 
 **When Creating New Features**
 
-1. Create feature directory directly under `app/` (e.g., `app/products/`)
+1. Create feature directory directly under `app/` (e.g., `app/demand/`, `app/qualification/`)
 2. Structure: `models.py`, `schemas.py`, `routes.py`, `service.py`, `tests/`
 3. Models inherit from `Base` and `TimestampMixin`
 4. Use `get_db()` dependency for database sessions
