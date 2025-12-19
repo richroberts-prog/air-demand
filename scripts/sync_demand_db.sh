@@ -49,10 +49,10 @@ echo -e "${GREEN}[1/4] Creating dump on production server...${NC}"
 
 ssh $PROD_SERVER << EOF
     # Use production's database connection (from .env)
-    source /root/air/.env
+    source /root/air-demand/.env
 
     # Dump demand tables
-    cd /root/air
+    cd /root/air-demand
 
     # Extract DB connection details
     PGHOST=\$(echo \$DATABASE_URL | sed -n 's/.*@\([^:]*\):.*/\1/p')
@@ -64,12 +64,14 @@ ssh $PROD_SERVER << EOF
     export PGPASSWORD
 
     # Dump demand tables (data + schema)
-    pg_dump -h \$PGHOST -p \$PGPORT -U \$PGUSER -d \$PGDATABASE \
+    # Use pg_dump 18 to match database version
+    /usr/lib/postgresql/18/bin/pg_dump -h \$PGHOST -p \$PGPORT -U \$PGUSER -d \$PGDATABASE \
         -Fc \
         -t roles \
         -t role_snapshots \
         -t role_changes \
         -t role_enrichments \
+        -t role_briefings \
         -t role_scrape_runs \
         -t companies \
         -t company_enrichments \
