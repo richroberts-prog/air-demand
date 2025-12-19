@@ -83,6 +83,7 @@ services:
     # Environment variables
     environment:
       - NEXT_PUBLIC_API_URL=http://app:8123
+      - BACKEND_URL=http://app:8123
 
     # Wait for app to be ready
     depends_on:

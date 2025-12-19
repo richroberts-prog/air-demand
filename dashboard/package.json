@@ -7,7 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:ui": "playwright test"
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:smoke": "playwright test tests/smoke/",
+    "test:features": "playwright test tests/features/",
+    "test:integration": "playwright test tests/integration/",
+    "test:e2e": "playwright test tests/e2e/",
+    "test:report": "playwright show-report",
+    "test:staging": "BASE_URL=http://161.35.135.71:3000 playwright test",
+    "test:prod": "BASE_URL=http://104.236.56.33:3000 playwright test tests/smoke/"
   },
   "dependencies": {
     "next": "14.2.18",

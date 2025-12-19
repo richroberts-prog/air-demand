@@ -24,7 +24,7 @@ export async function fetchRoles(params?: FetchRolesParams): Promise<Role[]> {
   if (params?.page_size) queryParams.set('page_size', String(params.page_size))
 
   const queryString = queryParams.toString()
-  const url = `${API_BASE}/jobs/roles${queryString ? `?${queryString}` : ''}`
+  const url = `${API_BASE}/demand/roles${queryString ? `?${queryString}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -46,7 +46,7 @@ export async function fetchRolesWithPagination(params?: FetchRolesParams): Promi
   if (params?.page_size) queryParams.set('page_size', String(params.page_size))
 
   const queryString = queryParams.toString()
-  const url = `${API_BASE}/jobs/roles${queryString ? `?${queryString}` : ''}`
+  const url = `${API_BASE}/demand/roles${queryString ? `?${queryString}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -57,7 +57,7 @@ export async function fetchRolesWithPagination(params?: FetchRolesParams): Promi
 }
 
 export async function fetchRole(id: number): Promise<RoleDetail> {
-  const response = await fetch(`${API_BASE}/jobs/roles/${id}`)
+  const response = await fetch(`${API_BASE}/demand/roles/${id}`)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch role: ${response.statusText}`)
@@ -67,7 +67,7 @@ export async function fetchRole(id: number): Promise<RoleDetail> {
 }
 
 export async function fetchStats(): Promise<RoleStats> {
-  const response = await fetch(`${API_BASE}/jobs/stats`)
+  const response = await fetch(`${API_BASE}/demand/stats`)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch stats: ${response.statusText}`)
@@ -77,7 +77,7 @@ export async function fetchStats(): Promise<RoleStats> {
 }
 
 export async function fetchScrapeRuns(limit: number = 10): Promise<ScrapeRun[]> {
-  const response = await fetch(`${API_BASE}/jobs/scrape-runs?limit=${limit}`)
+  const response = await fetch(`${API_BASE}/demand/scrape-runs?limit=${limit}`)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch scrape runs: ${response.statusText}`)
@@ -87,7 +87,7 @@ export async function fetchScrapeRuns(limit: number = 10): Promise<ScrapeRun[]> 
 }
 
 export async function triggerScrape(): Promise<{ message: string; status: string }> {
-  const response = await fetch(`${API_BASE}/jobs/scrape`, {
+  const response = await fetch(`${API_BASE}/demand/scrape`, {
     method: 'POST',
   })
 
@@ -111,7 +111,7 @@ export async function fetchNewRoles(since?: string, tiers?: string[]): Promise<N
     params.set('qualified_only', 'true')
   }
 
-  const url = `${API_BASE}/jobs/roles/new${params.toString() ? `?${params}` : ''}`
+  const url = `${API_BASE}/demand/roles/new${params.toString() ? `?${params}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -131,7 +131,7 @@ export async function fetchRoleChanges(
     changeTypes.forEach(t => params.append('change_types', t))
   }
 
-  const url = `${API_BASE}/jobs/roles/changes${params.toString() ? `?${params}` : ''}`
+  const url = `${API_BASE}/demand/roles/changes${params.toString() ? `?${params}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -145,7 +145,7 @@ export async function fetchDisappearedRoles(since?: string): Promise<Role[]> {
   const params = new URLSearchParams()
   if (since) params.set('since', since)
 
-  const url = `${API_BASE}/jobs/roles/disappeared${params.toString() ? `?${params}` : ''}`
+  const url = `${API_BASE}/demand/roles/disappeared${params.toString() ? `?${params}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -159,7 +159,7 @@ export async function fetchHotRoles(limit?: number): Promise<Role[]> {
   const params = new URLSearchParams()
   if (limit) params.set('limit', String(limit))
 
-  const url = `${API_BASE}/jobs/roles/hot${params.toString() ? `?${params}` : ''}`
+  const url = `${API_BASE}/demand/roles/hot${params.toString() ? `?${params}` : ''}`
   const response = await fetch(url)
 
   if (!response.ok) {
@@ -172,7 +172,7 @@ export async function fetchHotRoles(limit?: number): Promise<Role[]> {
 // User Settings APIs
 
 export async function fetchLastVisit(): Promise<LastVisitResponse> {
-  const response = await fetch(`${API_BASE}/jobs/settings/last-visit`)
+  const response = await fetch(`${API_BASE}/demand/settings/last-visit`)
 
   if (!response.ok) {
     throw new Error(`Failed to fetch last visit: ${response.statusText}`)
@@ -182,7 +182,7 @@ export async function fetchLastVisit(): Promise<LastVisitResponse> {
 }
 
 export async function updateLastVisit(lastVisit: Date): Promise<LastVisitResponse> {
-  const response = await fetch(`${API_BASE}/jobs/settings/last-visit`, {
+  const response = await fetch(`${API_BASE}/demand/settings/last-visit`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ last_visit: lastVisit.toISOString() }),

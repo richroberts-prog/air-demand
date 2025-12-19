@@ -12,9 +12,9 @@ test.describe('Shared Constants Integration Tests', () => {
     await page.waitForSelector('text=Loading', { state: 'hidden', timeout: 30000 }).catch(() => {})
   })
 
-  test('should fetch constants from API on page load', async ({ page, request }) => {
+  test('should fetch constants from API on page load', async ({ page, request, baseURL }) => {
     // Test the API directly to verify it works
-    const response = await request.get('http://localhost:3000/api/shared/constants')
+    const response = await request.get(`${baseURL}/api/shared/constants`)
     expect(response.status()).toBe(200)
 
     const data = await response.json()
