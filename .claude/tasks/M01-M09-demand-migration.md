@@ -13,7 +13,10 @@ Migrate demand-side functionality from `/home/richr/air` to `/home/richr/air-dem
 - ✅ M06: Type checking → COMPLETED (MyPy: 0 errors, Pyright: 218 warnings in tests)
 - ✅ M07: Dashboard migration + DB cleanup → COMPLETED (2025-12-19)
 - ✅ M08: Deployment scripts → COMPLETED (2025-12-19)
-- ⏳ M09: Side-by-side validation → PENDING
+- ✅ M09-A: Staging droplet created → COMPLETED (2025-12-19)
+- ✅ M09-B: Code pushed to GitHub (clean history) → COMPLETED (2025-12-19)
+- ⏳ M09-C: Deploy to staging from GitHub → PENDING (user to run)
+- ⏳ M09-D: Validate staging → PENDING
 
 **Key Safety Check**: No imports from `app.recruiting` found in `app/jobs/` - demand code is cleanly isolated.
 
