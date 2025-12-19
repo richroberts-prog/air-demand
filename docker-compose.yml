@@ -4,10 +4,10 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: obsidian_db
+      POSTGRES_DB: air_demand_db
     ports:
-      # Use port 5433 on host to avoid conflicts with local PostgreSQL on standard port 5432
-      - "5433:5432"
+      # Use port 5432 on host for local development
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -41,7 +41,7 @@ services:
       - PYTHONUNBUFFERED=1
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       # Override DATABASE_URL for Docker networking (app -> db service)
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/obsidian_db
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/air_demand_db
 
     # Wait for database to be healthy before starting app
     depends_on:
@@ -67,6 +67,26 @@ services:
     #   timeout: 10s
     #   retries: 3
     #   start_period: 40s
+
+    # Restart policy
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+
+    # Port mapping
+    ports:
+      - "3000:3000"
+
+    # Environment variables
+    environment:
+      - NEXT_PUBLIC_API_URL=http://app:8123
+
+    # Wait for app to be ready
+    depends_on:
+      - app
 
     # Restart policy
     restart: unless-stopped
