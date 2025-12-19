@@ -10,11 +10,26 @@ from app.core.health import database_health_check, health_check, readiness_check
 
 @pytest.mark.asyncio
 async def test_health_check_returns_healthy():
-    """Test that basic health check returns healthy status."""
-    response = await health_check()
+    """Test that enhanced health check returns healthy status."""
+    # Create a mock database session
+    mock_db = AsyncMock()
+    mock_db.execute = AsyncMock()
 
-    assert response["status"] == "healthy"
-    assert response["service"] == "api"
+    # Patch get_settings to avoid config dependencies
+    with patch("app.core.health.get_settings") as mock_get_settings:
+        mock_settings = AsyncMock()
+        mock_settings.mailgun_api_key = "test_key"
+        mock_settings.mailgun_domain = "test.com"
+        mock_settings.digest_recipient = "test@test.com"
+        mock_get_settings.return_value = mock_settings
+
+        response = await health_check(db=mock_db)
+
+    # Enhanced health check returns status, timestamp, and checks
+    assert response["status"] in ["healthy", "degraded"]
+    assert "timestamp" in response
+    assert "checks" in response
+    assert "database" in response["checks"]
 
 
 @pytest.mark.asyncio

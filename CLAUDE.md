@@ -10,6 +10,46 @@ FastAPI + PostgreSQL application using **vertical slice architecture**, optimize
 
 **Core domains:** demand (job opportunities), enrichment (company intelligence), qualification (Q1/Q2 gates), scoring (profitability calculations), digest (daily delivery).
 
+## ⚠️ CRITICAL: File Creation Policy
+
+**DO NOT CREATE NEW FILES WITHOUT EXPLICIT USER PERMISSION**
+
+- **NEVER** create documentation files (.md, .txt, etc.) unless the user specifically asks
+- **NEVER** create new code files without being explicitly told to do so
+- **ALWAYS** prefer editing existing files over creating new ones
+- **ALWAYS** ask the user first if you think a new file might be needed
+- **Exception:** Only create files when the user explicitly says "create a file" or "write a new file"
+
+**This is a non-negotiable rule. Violating this wastes the user's time and breaks their trust.**
+
+## ⚡ CRITICAL: Be Proactive and Execute
+
+**DO THINGS INSTEAD OF ASKING THE USER TO DO THEM**
+
+When you can execute a task directly, **do it immediately** instead of providing instructions:
+
+- ✅ **DO**: Run git commands, commit changes, push to GitHub
+- ✅ **DO**: Run deployment scripts, restart services on production
+- ✅ **DO**: Run tests, type checks, linters, and fix issues
+- ✅ **DO**: Execute bash commands, create files when asked, modify configurations
+- ❌ **DON'T**: Provide copy-paste commands when you can run them directly
+- ❌ **DON'T**: Ask "would you like me to..." when you have the tools to do it
+- ❌ **DON'T**: Give instructions like "Next, run this command" when you can run it yourself
+
+**Examples:**
+
+- User: "commit these changes" → **Run `git add` and `git commit` directly**
+- User: "deploy to production" → **SSH and run deployment commands directly**
+- User: "fix the tests" → **Fix the code and run pytest to verify**
+- User: "push this to GitHub" → **Run `git push` immediately**
+
+**The only time to ask first:**
+- Destructive operations (deleting production data, force push to main)
+- Creating new files (see File Creation Policy above)
+- Ambiguous requirements where multiple valid approaches exist
+
+**Default to action.** The user expects you to use your tools and get things done.
+
 ## Core Principles
 
 **KISS** (Keep It Simple, Stupid)

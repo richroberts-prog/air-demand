@@ -21,17 +21,18 @@ def create_settings() -> Settings:
 
 
 def test_settings_defaults() -> None:
-    """Test Settings instantiation with default values."""
+    """Test Settings instantiation with default values from .env file."""
     with patch.dict(
         os.environ,
         {
             "DATABASE_URL": "postgresql+asyncpg://test:test@localhost:5432/test",
-            "LOG_LEVEL": "INFO",  # Override .env file to test default value
+            "LOG_LEVEL": "INFO",  # Override to test specific value
         },
     ):
         settings = create_settings()
 
-        assert settings.app_name == "Obsidian Agent Project"
+        # app_name is set in .env to "Air Demand"
+        assert settings.app_name == "Air Demand"
         assert settings.version == "0.1.0"
         assert settings.environment == "development"
         assert settings.log_level == "INFO"

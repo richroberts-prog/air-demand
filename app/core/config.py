@@ -45,7 +45,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:3001",
         "http://localhost:8123",
-        "http://104.236.56.33:3000",  # DigitalOcean dashboard
+        "http://161.35.135.71:3000",  # Production dashboard
         "https://air-dashboard-alc0.onrender.com",  # Render dashboard
         "https://air-api-yt5c.onrender.com",  # Render API
     ]

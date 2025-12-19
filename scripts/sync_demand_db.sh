@@ -9,7 +9,7 @@ set -e  # Exit on any error
 #   ./scripts/sync_demand_db.sh
 #
 # Requirements:
-#   - SSH access to production server (root@104.236.56.33)
+#   - SSH access to production server (root@161.35.135.71)
 #   - Database container running locally (air-demand-db-1)
 #
 # What it does:
@@ -39,7 +39,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "air-demand-db-1"; then
     exit 1
 fi
 
-PROD_SERVER="root@104.236.56.33"
+PROD_SERVER="root@161.35.135.71"
 DUMP_FILE="demand_sync_$(date +%Y%m%d_%H%M%S).dump"
 REMOTE_DUMP="/tmp/$DUMP_FILE"
 LOCAL_DUMP="/tmp/$DUMP_FILE"

@@ -47,7 +47,7 @@ if ! docker ps --format '{{.Names}}' | grep -q "demand-db"; then
 fi
 
 # Get latest scrape time from production
-PROD_SCRAPE_TIME=$(ssh root@104.236.56.33 "docker exec air-demand-api-1 python -c \"
+PROD_SCRAPE_TIME=$(ssh root@161.35.135.71 "docker exec air-demand-api-1 python -c \"
 import asyncio
 from app.core.database import AsyncSessionLocal
 from app.demand.models import RoleScrapeRun

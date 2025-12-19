@@ -10,7 +10,7 @@
 
 set -e
 
-PROD_HOST="root@104.236.56.33"
+PROD_HOST="root@161.35.135.71"
 PROD_DIR="/root/air-demand"
 
 # Colors

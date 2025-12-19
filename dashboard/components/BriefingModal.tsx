@@ -89,7 +89,7 @@ export function BriefingModal({
     setError(null);
     try {
       const res = await fetch(
-        `/api/jobs/roles/${paraformId}/briefing`,
+        `/api/demand/roles/${paraformId}/briefing`,
       );
       if (!res.ok) {
         if (res.status === 404) {
