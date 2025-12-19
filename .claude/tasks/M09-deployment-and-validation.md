@@ -3,12 +3,12 @@ type: task
 description: Deploy air-demand to staging, validate, and cutover to production
 tags: [deployment, staging, validation, m09]
 status: in_progress
-last_updated: 2025-12-19 12:45 UTC
+last_updated: 2025-12-19 13:20 UTC
 ---
 
 # M09: Deployment and Validation
 
-## Current Status: 98% Complete ✅
+## Current Status: 99% Complete ✅
 
 **Migration Phase: COMPLETE**
 - All code migrated (M01-M07) ✅
@@ -17,12 +17,19 @@ last_updated: 2025-12-19 12:45 UTC
 - Code pushed to GitHub (M09-B) ✅
 
 **Deployment Phase: OPERATIONAL** 🎉
-- Deployed to staging (M09-C) ✅
+- Deployed API to staging (M09-C) ✅
+- Deployed Dashboard to staging (M09-E) ✅
 - Validation in progress (M09-D) ⏳
-- All services running
+- All services running (API + Scheduler + Dashboard)
 - Test scrape successful (614 roles, 94 qualified, 0 errors)
 - Digest email working
+- Dashboard accessible and rendering correctly
 - Ready for 24-48hr monitoring period
+
+**Local Development: DOCKERIZED** 🐳
+- All services running in Docker containers
+- Database, API, and Dashboard containerized
+- Local mirrors staging/production architecture
 
 ---
 
@@ -100,6 +107,55 @@ last_updated: 2025-12-19 12:45 UTC
 - Scrape at 05:00 UTC (5am)
 - Scrape at 17:00 UTC (5pm)
 - Digest at 06:00 UTC (6am daily)
+
+### Dashboard Deployment (M09-E) ✅
+
+**Completed: 2025-12-19 13:20 UTC**
+
+1. **Local Docker Setup**:
+   - Updated `docker-compose.yml` to include 3 services:
+     - `db`: PostgreSQL 18 on port 5432
+     - `app`: FastAPI API on port 8123
+     - `dashboard`: Next.js dashboard on port 3000
+   - Fixed database name from `obsidian_db` to `air_demand_db`
+   - Created `dashboard/Dockerfile` with multi-stage build
+   - Configured Next.js for standalone output mode
+   - All services running locally in Docker ✅
+
+2. **Dashboard Code to GitHub**:
+   - Added complete dashboard directory to repository
+   - 48 files: Next.js app, components, tests, config
+   - Includes Playwright tests for E2E testing
+   - Pushed to main branch (commit: ce88b13)
+
+3. **Staging Deployment**:
+   - Created `scripts/deploy-dashboard.sh` deployment script
+   - Pulled latest code to staging droplet
+   - Installed Node.js 20 via nodesource repository
+   - Built dashboard with `npm run build`
+   - Created systemd service: `air-demand-dashboard`
+   - Dashboard running on port 3000 ✅
+
+4. **Verification**:
+   - ✅ Dashboard accessible: http://161.35.135.71:3000
+   - ✅ Service running and healthy
+   - ✅ Dashboard loads and renders correctly
+   - ✅ API integration working (calls to localhost:8123)
+   - ✅ Production data displaying (747 roles)
+
+**Services on Staging:**
+```bash
+air-demand-api          - port 8123 (FastAPI)
+air-demand-scheduler    - background (APScheduler)
+air-demand-dashboard    - port 3000 (Next.js)
+```
+
+**Local Docker Services:**
+```bash
+air-demand-db-1         - port 5432 (PostgreSQL)
+air-demand-app-1        - port 8123 (FastAPI)
+air-demand-dashboard-1  - port 3000 (Next.js)
+```
 
 ---
 
@@ -251,6 +307,109 @@ echo "$SESSION_B64" | base64 -d > paraform_session.json
 - Created staging droplet in ~30 seconds
 - Much faster than manual dashboard creation
 - Scriptable and repeatable
+
+### 8. Docker Multi-Service Architecture ✅
+
+**Achievement:** Successfully containerized all services locally to mirror production.
+
+**Implementation:**
+```yaml
+# docker-compose.yml with 3 services
+services:
+  db:        # PostgreSQL 18
+  app:       # FastAPI API
+  dashboard: # Next.js frontend
+```
+
+**Benefits:**
+- Local environment matches staging/production architecture
+- Easy to spin up complete stack: `docker-compose up -d`
+- Isolated dependencies (Python, Node.js, PostgreSQL)
+- Consistent behavior across environments
+
+**Challenges Solved:**
+- Database naming: Fixed `obsidian_db` → `air_demand_db`
+- Port conflicts: Standardized on 5432, 8123, 3000
+- Network communication: Services communicate via Docker network
+- Volume persistence: Database data persists across restarts
+
+**Lesson:** Container-based development eliminates "works on my machine" issues.
+
+### 9. Next.js Standalone Output for Production ✅
+
+**Issue:** Next.js default build creates large deployments with full node_modules.
+
+**Solution:** Use standalone output mode for minimal production builds.
+
+```javascript
+// next.config.js
+output: 'standalone'  // Creates optimized server.js
+```
+
+**Benefits:**
+- Smaller deployment size (only production dependencies)
+- Faster startup time
+- Single server.js file instead of full Next.js
+- Perfect for Docker and systemd deployments
+
+**Multi-stage Dockerfile:**
+```dockerfile
+FROM node:20-alpine AS builder
+# Build app
+RUN npm run build
+
+FROM node:20-alpine AS runner
+# Copy only standalone output
+COPY --from=builder /app/.next/standalone ./
+```
+
+**Lesson:** Next.js standalone mode is ideal for production deployments.
+
+### 10. Dashboard Deployment Without Docker on Server ✅
+
+**Decision:** Deploy dashboard as systemd service, not Docker container on staging.
+
+**Rationale:**
+- Simpler: Just Node.js + systemd service
+- Lighter: No Docker overhead on 1GB RAM droplet
+- Faster: Direct npm start, no container layer
+- API already running as systemd service (consistent approach)
+
+**Implementation:**
+```bash
+# Build dashboard
+npm run build
+
+# Run with systemd
+ExecStart=/usr/bin/npm start
+```
+
+**Alternative Considered:** Deploy via Docker Compose on staging
+- **Rejected:** More complex, requires Docker installation, higher memory usage
+
+**Lesson:** Not everything needs Docker in production; systemd services work great for simple deployments.
+
+### 11. Node.js Installation via Nodesource Repository ✅
+
+**Issue:** Ubuntu 24.04 default Node.js is too old for Next.js 14.
+
+**Solution:** Use Nodesource official repository for Node.js 20.
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+```
+
+**Why Nodesource:**
+- Always up-to-date (Node.js 20.19.6)
+- Official repository maintained by Node.js team
+- Includes npm automatically
+- Simple installation script
+
+**Alternative Considered:** nvm (Node Version Manager)
+- **Rejected:** More complex, requires per-user setup, not ideal for systemd
+
+**Lesson:** Use Nodesource for production Node.js on Ubuntu servers.
 
 ---
 
@@ -678,13 +837,21 @@ ssh root@$STAGING_IP "cd /root/air-demand && git pull origin main && systemctl r
    - Watch 6am digest tomorrow (2025-12-20 06:00 UTC)
    - Check logs for any errors
 
-2. **Choose cutover strategy** (Option A, B, or C) - pending monitoring results
+2. **Playwright Testing** 📋 PLANNED (see `dashboard-playwright-testing.md`)
+   - Audit existing Playwright tests
+   - Clean up test suite (remove debug tests)
+   - Run tests against local Docker environment
+   - Run tests against staging dashboard
+   - Establish continuous testing workflow
+   - Enable production smoke tests
 
-3. **Execute cutover** (switch production) - after successful monitoring
+3. **Choose cutover strategy** (Option A, B, or C) - pending monitoring results
 
-4. **Archive old repository** (after 1 week stable)
+4. **Execute cutover** (switch production) - after successful monitoring
 
-5. **Delete staging droplet** (after cutover if using Option B)
+5. **Archive old repository** (after 1 week stable)
+
+6. **Delete staging droplet** (after cutover if using Option B)
 
 ---
 
@@ -703,29 +870,47 @@ curl http://$STAGING_IP:8123/health
 ssh root@$STAGING_IP "journalctl -u air-demand-api -f"
 
 # Restart services
-ssh root@$STAGING_IP "systemctl restart air-demand-scheduler air-demand-api"
+ssh root@$STAGING_IP "systemctl restart air-demand-scheduler air-demand-api air-demand-dashboard"
 
 # Check system health
 ssh root@$STAGING_IP "cd /root/air-demand && uv run python -m scripts.check_health"
 
-# Pull latest code
-ssh root@$STAGING_IP "cd /root/air-demand && git pull origin main && systemctl restart air-demand-scheduler air-demand-api"
+# Check dashboard
+curl http://$STAGING_IP:3000
+
+# Pull latest code and restart all services
+ssh root@$STAGING_IP "cd /root/air-demand && git pull origin main && systemctl restart air-demand-scheduler air-demand-api air-demand-dashboard"
 ```
 
 ### Local Development
 
 ```bash
-# Start API
+# Start all services with Docker
+docker-compose up -d
+
+# Check all containers
+docker ps
+
+# Start API only
 uv run uvicorn app.main:app --reload --port 8123
+
+# Start dashboard only (from dashboard/)
+cd dashboard && npm run dev
 
 # Run tests
 uv run pytest -v
+
+# Run dashboard tests
+cd dashboard && npm run test:ui
 
 # Type check
 uv run mypy app/
 
 # Sync DB from production
 ./scripts/sync_demand_db.sh
+
+# Stop all Docker services
+docker-compose down
 ```
 
 ---
@@ -741,9 +926,10 @@ uv run mypy app/
 
 ✅ **Staging Deployed:**
 - Staging validates successfully (614 roles, 94 qualified, 0 errors)
-- Services running (API + scheduler active)
+- Services running (API + scheduler + dashboard active)
 - Test scrape successful (10min duration)
 - Digest emails work (sent to rich.roberts@talentpipe.ai)
+- Dashboard accessible and rendering correctly
 - Schedule configured (5am/5pm scrapes, 6am daily digest)
 
 ⏳ **Monitoring Period:**
