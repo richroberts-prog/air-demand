@@ -108,3 +108,17 @@ Write a learning when:
 - `docs/adr/` - Decisions we made
 - `docs/standards/` - How we do things
 - `.claude/tasks/completed/` - Implementation history
+
+---
+
+## Documented Learnings
+
+### 2025-12-19 - Test Fixing and Deployment
+- **File**: [2025-12-19-test-fixing-and-deployment.md](2025-12-19-test-fixing-and-deployment.md)
+- **Topics**: Testing, Deployment, Migration, Dashboard Bug Fix
+- **Key Insights**: 
+  - App name migration testing issues
+  - Database schema synchronization patterns
+  - API endpoint consistency after migration
+  - Proactive AI execution patterns
+  - Full deployment automation

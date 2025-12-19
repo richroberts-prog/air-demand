@@ -3,10 +3,10 @@ type: task
 description: Migrate working functionality, then optimize systematically
 tags: [migration, implementation, roadmap, planning]
 status: in_progress
-version: 3.4
-last_updated: 2025-12-19 16:00 UTC
+version: 3.5
+last_updated: 2025-12-19 16:36 UTC
 owner: engineering
-progress: 95%
+progress: 97%
 related:
   - PRD.md
   - docs/adr/
@@ -39,7 +39,7 @@ Copy working code → Validate parity → Deploy → Then optimize
 
 ## PHASE 1: MIGRATION
 
-**Status**: 10.5/11 tasks complete (95%) - M11 code changes complete, deployment steps pending
+**Status**: 10.7/11 tasks complete (97%) - M11 code deployed, operational tasks pending
 
 **Detailed Execution Plan**: See `.claude/tasks/M01-M09-demand-migration.md` for step-by-step instructions, progress tracking, and completion summaries.
 
@@ -103,14 +103,18 @@ Copy working code → Validate parity → Deploy → Then optimize
   - ✅ Committed to GitHub (b7d86c2)
   - See: `.claude/tasks/completed/M10-dashboard-playwright-testing.md`
 
-- 🔄 **M11**: Production cutover (IN PROGRESS - Code Changes Complete)
+- 🔄 **M11**: Production cutover (IN PROGRESS - Code Deployed)
   - ✅ Repository code changes complete (CORS config, script updates)
-  - 📋 Promote staging (161.35.135.71) to production
-  - 📋 Create full database backup before cutover
-  - 📋 Update environment configs (staging → production)
-  - 📋 Pause old production droplet (104.236.56.33) as 1-week backup
-  - 📋 7-day monitoring period with daily health checks
-  - 📋 Delete old droplet after successful week
+  - ✅ Code committed and pushed to GitHub (fbaaf4a)
+  - ✅ Backend deployed to 161.35.135.71 (API running)
+  - ✅ Dashboard deployed to 161.35.135.71 (Next.js rebuilt)
+  - ✅ Health checks passing (API: healthy, DB: ok)
+  - ✅ View Briefing button fixed (/api/jobs/ → /api/demand/)
+  - 📋 Manual: Update .env on server (APP_NAME, ENVIRONMENT, scheduler times)
+  - 📋 Manual: Create full database backup before cutover
+  - 📋 Manual: Pause old production droplet (104.236.56.33) as 1-week backup
+  - 📋 Manual: 7-day monitoring period with daily health checks
+  - 📋 Manual: Delete old droplet after successful week
   - ✅ Documented rollback procedure
   - See: `.claude/tasks/M11-production-cutover.md`
 

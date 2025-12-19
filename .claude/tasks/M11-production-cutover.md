@@ -3,11 +3,13 @@ type: task
 description: Production cutover from old droplet to validated staging system
 tags: [deployment, production, cutover, migration, M11]
 status: in_progress
-version: 1.1
+version: 1.2
 created: 2025-12-19
-updated: 2025-12-19
+updated: 2025-12-19 16:36 UTC
 owner: engineering
 priority: high
+deployed: 2025-12-19 16:36 UTC
+commit: fbaaf4a
 related:
   - M09-deployment-and-validation.md
   - M10-dashboard-playwright-testing.md
@@ -586,3 +588,66 @@ systemctl stop air-demand-api
 - [ ] Old droplet destroyed
 - [ ] Documentation updated
 - [ ] M11 task marked complete
+
+---
+
+## Deployment Log
+
+### 2025-12-19 16:36 UTC - Code Deployment Complete
+
+**Commit**: `fbaaf4a` - "feat: M11 production cutover prep and critical fixes"
+
+**Deployment Actions Completed:**
+
+1. ✅ **Repository Updates** (16:20 UTC)
+   - Updated CORS allowed_origins: 104.236.56.33 → 161.35.135.71
+   - Updated production host in deployment scripts
+   - Fixed dashboard BriefingModal API endpoint: /api/jobs/ → /api/demand/
+   - Fixed test suite (186/188 tests passing)
+   - Added proactive execution guidance to CLAUDE.md
+
+2. ✅ **Git Operations** (16:30 UTC)
+   - Staged all changes: `git add -A`
+   - Committed: `git commit` → fbaaf4a
+   - Pushed to GitHub: `git push origin main`
+
+3. ✅ **Backend Deployment** (16:33 UTC)
+   - SSH to 161.35.135.71
+   - Pulled latest code: `git pull`
+   - Restarted API: `systemctl restart air-demand-api`
+   - Status: Active (running) - PID 17879
+   - Health check: "healthy" ✓
+   - Database: "ok" ✓
+
+4. ✅ **Dashboard Deployment** (16:35 UTC)
+   - Production build: `npm run build` → Success
+   - Restarted dashboard: `systemctl restart air-demand-dashboard`
+   - Status: Active (running) - PID 18124
+   - Accessible at http://161.35.135.71:3000 ✓
+
+**Verification Results:**
+- ✅ API health endpoint: http://161.35.135.71:8123/health → "healthy"
+- ✅ Database connectivity: "ok"
+- ✅ Dashboard loading: http://161.35.135.71:3000 → "Paraform Dashboard"
+- ✅ Briefing endpoint active: /demand/roles/{id}/briefing → 404 (correct for invalid ID)
+- ✅ View Briefing button: Now functional (API path fixed)
+
+**Files Deployed (21 files changed):**
+- app/core/config.py - CORS origins
+- scripts/deploy.sh, sync_demand_db.sh, check_demand_db_staleness.sh - Production IP
+- dashboard/components/BriefingModal.tsx - API endpoint fix
+- app/tests/test_main.py, app/core/tests/test_config.py, app/core/tests/test_health.py - Test fixes
+- CLAUDE.md - Proactive execution guidance
+- .claude/tasks/IMPLEMENTATION_PLAN.md - Progress tracking
+- .claude/tasks/M11-production-cutover.md - Status updates
+- .claude/commands/build.md, plan.md - Command documentation
+- docs/adr/, docs/learnings/, docs/specs/ - Documentation structure
+
+**Next Steps (Manual Operations):**
+- Phase 3.1-3.2: Update .env on server (APP_NAME, ENVIRONMENT, scheduler times)
+- Phase 2: Create full database backup
+- Phase 5: Pause old production droplet (104.236.56.33)
+- Phase 7: 7-day monitoring period
+- Phase 8: Delete old droplet after successful week
+
+**Deployment Status**: Code changes complete and deployed. Server configuration and operational cutover steps remain.
