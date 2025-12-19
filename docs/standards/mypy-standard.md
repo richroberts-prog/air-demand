@@ -1,3 +1,9 @@
+---
+type: standard
+description: Static type checking configuration and practices using MyPy in strict mode
+tags: [type-checking, mypy, type-safety, validation]
+---
+
 # MyPy Standard: Static Type Checking Configuration
 
 ## Overview

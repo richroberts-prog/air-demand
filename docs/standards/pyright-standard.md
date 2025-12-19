@@ -1,3 +1,9 @@
+---
+type: standard
+description: Advanced type checking configuration using Pyright as secondary type checker
+tags: [type-checking, pyright, type-safety, validation]
+---
+
 # Pyright Standard: Advanced Type Checking Configuration
 
 ## Overview

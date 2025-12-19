@@ -1,3 +1,9 @@
+---
+type: standard
+description: Linting and formatting configuration using Ruff for consistent code style
+tags: [linting, formatting, ruff, code-quality]
+---
+
 # Ruff Standard: Linting and Formatting Configuration
 
 ## Overview

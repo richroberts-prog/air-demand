@@ -1,3 +1,9 @@
+---
+type: standard
+description: Structured logging patterns with hybrid dotted namespace for AI-parseable events
+tags: [logging, structlog, observability, ai-optimization, opentelemetry]
+---
+
 # Logging Standard: Hybrid Dotted Namespace Pattern
 
 ## Format Specification

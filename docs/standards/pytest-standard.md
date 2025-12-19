@@ -1,3 +1,9 @@
+---
+type: standard
+description: Testing framework configuration and best practices using pytest with async support
+tags: [testing, pytest, async, quality-assurance]
+---
+
 # Pytest Standard: Testing Configuration and Best Practices
 
 ## Overview

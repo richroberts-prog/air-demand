@@ -19,7 +19,7 @@ FastAPI + PostgreSQL application using **vertical slice architecture**, optimize
 **Vertical Slice Architecture**
 
 - Each feature owns its database models, schemas, routes, and business logic
-- Features live in separate directories under `app/` (e.g., `app/products/`, `app/orders/`)
+- Features live in separate directories directly under `app/` (e.g., `app/products/`, `app/orders/`)
 - Shared utilities go in `app/shared/` only when used by 3+ features
 - Core infrastructure (`app/core/`) is shared across all features
 
@@ -27,20 +27,19 @@ FastAPI + PostgreSQL application using **vertical slice architecture**, optimize
 
 - Strict type checking enforced (MyPy + Pyright in strict mode)
 - All functions, methods, and variables MUST have type annotations
-- Zero type suppressions allowed
-- All functions must have complete type hints
-- Strict mypy & pyright configuration is enforced
+- Zero type suppressions allowed without documented justification
 - No `Any` types without explicit justification
 - Test files have relaxed typing rules (see pyproject.toml)
+- See `docs/standards/mypy-standard.md` and `docs/standards/pyright-standard.md` for details
 
 **AI-Optimized Patterns**
 
-- Structured logging: Use `domain.component.action_state` pattern (hybrid dotted namespace)
+- Structured logging: Use `domain.component.action_state` pattern
   - Format: `{domain}.{component}.{action}_{state}`
-  - Examples: `user.registration_started`, `product.create_completed`, `agent.tool.execution_failed`
-  - See `docs/logging-standard.md` for complete event taxonomy
+  - Examples: `user.registration_started`, `product.create_completed`, `database.health_check_failed`
+  - See `docs/standards/logging-standard.md` for complete event taxonomy
 - Request correlation: All logs include `request_id` automatically via context vars
-- Consistent verbose naming: Predictable patterns for AI code generation
+- Consistent naming: Predictable patterns for AI code generation
 
 ## Essential Commands
 
@@ -54,7 +53,7 @@ uv run uvicorn app.main:app --reload --port 8123
 ### Testing
 
 ```bash
-# Run all tests (34 tests, <1s execution)
+# Run all tests (~40 tests, <1s execution)
 uv run pytest -v
 
 # Run integration tests only
@@ -64,20 +63,20 @@ uv run pytest -v -m integration
 uv run pytest -v app/core/tests/test_database.py::test_function_name
 ```
 
-### Type Checking must be green
+### Type Checking
 
 ```bash
-# MyPy (strict mode)
+# MyPy (strict mode) - must be green
 uv run mypy app/
 
-# Pyright (strict mode)
+# Pyright (strict mode) - must be green
 uv run pyright app/
 ```
 
-### Linting & Formatting must be green
+### Linting & Formatting
 
 ```bash
-# Check linting
+# Check linting - must be green
 uv run ruff check .
 
 # Auto-format code
@@ -122,7 +121,7 @@ app/
 ├── core/           # Infrastructure (config, database, logging, middleware, health, exceptions)
 ├── shared/         # Cross-feature utilities (pagination, timestamps, error schemas)
 ├── main.py         # FastAPI application entry point
-└── features/       # Feature directories (e.g., products/, orders/)
+└── <features>/     # Feature slices directly here (e.g., products/, orders/)
 ```
 
 ### Database
@@ -147,30 +146,27 @@ app/
 
 **Structured Logging (structlog)**
 
-- JSON output for AI-parseable logs
-- Request ID correlation using `contextvars`
+- JSON output optimized for AI parsing
+- Request ID correlation via `contextvars`
 - Logger: `from app.core.logging import get_logger; logger = get_logger(__name__)`
-- Event naming: Hybrid dotted namespace pattern `domain.component.action_state`
-  - Examples: `user.registration_completed`, `database.connection_initialized`, `request.http_received`
-  - Detailed taxonomy: See `docs/logging-standard.md`
-- Exception logging: Always include `exc_info=True` for stack traces
+- Event naming: `domain.component.action_state` pattern
+- Exception logging: Always use `exc_info=True` for stack traces
 
-**Event Pattern Guidelines:**
-
-- **Format:** `{domain}.{component}.{action}_{state}`
-- **Domains:** application, request, database, health, agent, external, feature-name
-- **States:** `_started`, `_completed`, `_failed`, `_validated`, `_rejected`, `_retrying`
-- **Why:** OpenTelemetry compliant, AI/LLM parseable, grep-friendly, scalable for agents
+**Event Pattern:** `{domain}.{component}.{action}_{state}`
+- Examples: `user.registration_completed`, `database.connection_initialized`, `request.http_received`
+- **Complete taxonomy and guidelines:** See `docs/standards/logging-standard.md`
 
 **Middleware**
 
 - `RequestLoggingMiddleware`: Logs all requests with correlation IDs
-- `CORSMiddleware`: Configured for local development (see `app.core.config`)
+- `CORSMiddleware`: Configured for local development
 - Adds `X-Request-ID` header to all responses
 
 ### Documentation Style
 
-**Use Google-style docstrings** for all functions, classes, and modules:
+**Google-style Docstrings**
+
+Use Google-style docstrings for all functions, classes, and modules:
 
 ```python
 def process_request(user_id: str, query: str) -> dict[str, Any]:
@@ -185,24 +181,25 @@ def process_request(user_id: str, query: str) -> dict[str, Any]:
 
     Raises:
         ValueError: If query is empty or invalid.
-        ProcessingError: If processing fails after retries.
     """
 ```
 
-### Tool Docstrings for Agents
+**YAML Front Matter (REQUIRED)**
 
-**Critical Difference:** Tool docstrings are read by LLMs during tool selection. They must guide the agent to choose the RIGHT tool, use it EFFICIENTLY, and compose tools into workflows.
+All documentation files MUST include YAML front matter following our schema:
 
-Standard Google-style docstrings document **what code does** for human developers.
-Agent tool docstrings guide **when to use the tool and how** for LLM reasoning.
+```yaml
+---
+type: standard              # task | command | adr | guide | spec | standard | learning
+description: string         # one-line purpose
+tags: [string]             # discovery keywords
+---
+```
 
-**Key Principles:**
-
-1. **Guide Tool Selection** - Agent must choose this tool over alternatives
-2. **Prevent Token Waste** - Steer toward efficient parameter choices
-3. **Enable Composition** - Show how tool fits into multi-step workflows
-4. **Set Expectations** - Explain performance characteristics and limitations
-5. **Provide Examples** - Concrete usage with realistic data
+- `type`: Document type (see `docs/standards/yaml-frontmatter.md` for taxonomy)
+- `description`: Concise one-line summary of document purpose
+- `tags`: Keywords for discoverability and filtering
+- **Full schema and examples:** See `docs/standards/yaml-frontmatter.md`
 
 ### Shared Utilities
 
@@ -232,40 +229,39 @@ Agent tool docstrings guide **when to use the tool and how** for LLM reasoning.
 
 **When Creating New Features**
 
-1. Create feature directory under `app/` (e.g., `app/products/`)
+1. Create feature directory directly under `app/` (e.g., `app/products/`)
 2. Structure: `models.py`, `schemas.py`, `routes.py`, `service.py`, `tests/`
 3. Models inherit from `Base` and `TimestampMixin`
 4. Use `get_db()` dependency for database sessions
-5. Follow structured logging pattern: `feature.action_state` (e.g., `product.create_started`, `product.create_completed`)
+5. Follow structured logging: See `docs/standards/logging-standard.md` for event patterns
 6. Add router to `app/main.py`: `app.include_router(feature_router)`
 
 **Type Checking**
 
-- Run both MyPy and Pyright before committing
-- No type suppressions (`# type: ignore`, `# pyright: ignore`) unless absolutely necessary
-- Document suppressions with inline comments explaining why
+- Run both MyPy and Pyright before committing (both must pass)
+- See `docs/standards/mypy-standard.md` and `docs/standards/pyright-standard.md` for configuration details
+- No suppressions (`# type: ignore`, `# pyright: ignore`) unless absolutely necessary
+- Document any suppressions with inline comments explaining why
 
 **Testing**
 
 - Write tests alongside feature code in `tests/` subdirectory
-- Use `@pytest.mark.integration` for tests requiring real database
-- Fast unit tests preferred (<1s total execution time)
+- Use `@pytest.mark.integration` for tests requiring database
+- Fast execution preferred (~40 tests in <1s)
 - Test fixtures in `app/tests/conftest.py`
+- See `docs/standards/pytest-standard.md` for testing standards
 
-**Logging Best Practices**
+**Logging**
 
-- Start action: `logger.info("feature.action_started", **context)`
-- Success: `logger.info("feature.action_completed", **context)`
-- Failure: `logger.error("feature.action_failed", exc_info=True, error=str(e), error_type=type(e).__name__, **context)`
-- Include context: IDs, durations, error details
-- Avoid generic events like "processing" or "handling"
-- Use standard states: `_started`, `_completed`, `_failed`, `_validated`, `_rejected`
+- Use structured logging with context: `logger.info("feature.action_state", **context)`
+- Include IDs, durations, error details
+- Standard states: `_started`, `_completed`, `_failed`, `_validated`, `_rejected`
+- **Full guidelines:** See `docs/standards/logging-standard.md`
 
 **Database Patterns**
 
 - Always use async/await with SQLAlchemy
 - Use `select()` instead of `.query()` (SQLAlchemy 2.0 style)
-- Leverage `expire_on_commit=False` in session config
 - Test database operations with `@pytest.mark.integration`
 
 **API Patterns**
