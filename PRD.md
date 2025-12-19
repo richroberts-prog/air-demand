@@ -6,7 +6,7 @@ version: 1.0
 last_updated: 2025-12-19
 owner: product
 related:
-  - RECONSTRUCTION_PLAN.md
+  - .claude/tasks/IMPLEMENTATION_PLAN.md
   - docs/architecture/
 ---
 
