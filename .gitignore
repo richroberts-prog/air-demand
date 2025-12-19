@@ -22,3 +22,4 @@ htmlcov/
 .agents/external-docs
 guide.md
 .agents/reports
+logs/
