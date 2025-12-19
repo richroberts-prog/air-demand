@@ -3,10 +3,10 @@ type: task
 description: Migrate working functionality, then optimize systematically
 tags: [migration, implementation, roadmap, planning]
 status: in_progress
-version: 3.5
-last_updated: 2025-12-19 16:36 UTC
+version: 3.6
+last_updated: 2025-12-19 18:47 UTC
 owner: engineering
-progress: 97%
+progress: 98%
 related:
   - PRD.md
   - docs/adr/
@@ -39,7 +39,7 @@ Copy working code → Validate parity → Deploy → Then optimize
 
 ## PHASE 1: MIGRATION
 
-**Status**: 10.7/11 tasks complete (97%) - M11 code deployed, operational tasks pending
+**Status**: 10.8/11 tasks complete (98%) - M11 code deployed, test suite 100% clean, operational tasks pending
 
 **Detailed Execution Plan**: See `.claude/tasks/M01-M09-demand-migration.md` for step-by-step instructions, progress tracking, and completion summaries.
 
@@ -103,13 +103,16 @@ Copy working code → Validate parity → Deploy → Then optimize
   - ✅ Committed to GitHub (b7d86c2)
   - See: `.claude/tasks/completed/M10-dashboard-playwright-testing.md`
 
-- 🔄 **M11**: Production cutover (IN PROGRESS - Code Deployed)
+- 🔄 **M11**: Production cutover (IN PROGRESS - Code Deployed, Tests 100%)
   - ✅ Repository code changes complete (CORS config, script updates)
-  - ✅ Code committed and pushed to GitHub (fbaaf4a)
+  - ✅ Code committed and pushed to GitHub (403e49a)
   - ✅ Backend deployed to 161.35.135.71 (API running)
   - ✅ Dashboard deployed to 161.35.135.71 (Next.js rebuilt)
   - ✅ Health checks passing (API: healthy, DB: ok)
   - ✅ View Briefing button fixed (/api/jobs/ → /api/demand/)
+  - ✅ Test suite: 188/188 passing (100%), 0 warnings, 0 skipped
+  - ✅ Sync script fixed (pg_dump 18, correct paths, role_briefings table)
+  - ✅ AsyncMock warning resolved in health tests
   - 📋 Manual: Update .env on server (APP_NAME, ENVIRONMENT, scheduler times)
   - 📋 Manual: Create full database backup before cutover
   - 📋 Manual: Pause old production droplet (104.236.56.33) as 1-week backup
