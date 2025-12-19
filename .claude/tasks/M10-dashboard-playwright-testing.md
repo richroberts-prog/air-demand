@@ -620,7 +620,7 @@ BASE_URL=http://104.236.56.33:3000 npm run test:ui -- tests/prod-smoke.spec.ts
 
 ### Related Tasks
 - `M09-deployment-and-validation.md` - Deployment status
-- `M01-M08-demand-migration.md` - Migration complete
+- `completed/M01-M08-demand-migration.md` - Migration complete
 - This task depends on successful M09 completion
 
 ---

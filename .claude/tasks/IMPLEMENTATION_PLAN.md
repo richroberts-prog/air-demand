@@ -9,7 +9,7 @@ owner: engineering
 related:
   - PRD.md
   - docs/adr/
-  - .claude/tasks/M01-M09-demand-migration.md
+  - .claude/tasks/completed/M01-M08-demand-migration.md
 ---
 
 # Air Demand - Reconstruction Plan
