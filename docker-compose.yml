@@ -82,8 +82,10 @@ services:
 
     # Environment variables
     environment:
-      - NEXT_PUBLIC_API_URL=http://app:8123
+      # BACKEND_URL is used by Next.js API proxy route (server-side)
       - BACKEND_URL=http://app:8123
+      # Don't set NEXT_PUBLIC_API_URL - let it default to /api for browser requests
+      # which will proxy through Next.js to the backend
 
     # Wait for app to be ready
     depends_on:
