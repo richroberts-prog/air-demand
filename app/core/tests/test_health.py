@@ -1,6 +1,6 @@
 """Unit tests for health check endpoints."""
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from fastapi import HTTPException, status
@@ -11,13 +11,18 @@ from app.core.health import database_health_check, health_check, readiness_check
 @pytest.mark.asyncio
 async def test_health_check_returns_healthy():
     """Test that enhanced health check returns healthy status."""
-    # Create a mock database session
+    # Create a mock database session with proper return values
+    # Note: scalar_one_or_none() is sync, so use Mock not AsyncMock for result
+    mock_result = Mock()
+    mock_result.scalar_one_or_none.return_value = None  # No last scrape run
+
     mock_db = AsyncMock()
-    mock_db.execute = AsyncMock()
+    mock_db.execute = AsyncMock(return_value=mock_result)
 
     # Patch get_settings to avoid config dependencies
+    # Note: Use Mock (not AsyncMock) because Settings is not async
     with patch("app.core.health.get_settings") as mock_get_settings:
-        mock_settings = AsyncMock()
+        mock_settings = Mock()
         mock_settings.mailgun_api_key = "test_key"
         mock_settings.mailgun_domain = "test.com"
         mock_settings.digest_recipient = "test@test.com"
@@ -77,8 +82,9 @@ async def test_readiness_check_success():
     mock_db.execute = AsyncMock()
 
     # Patch get_settings to return test settings
+    # Note: Use Mock (not AsyncMock) because Settings is not async
     with patch("app.core.health.get_settings") as mock_get_settings:
-        mock_settings = AsyncMock()
+        mock_settings = Mock()
         mock_settings.environment = "test"
         mock_get_settings.return_value = mock_settings
 
@@ -101,8 +107,9 @@ async def test_readiness_check_failure():
     mock_db.execute = AsyncMock(side_effect=Exception("Database not ready"))
 
     # Patch get_settings
+    # Note: Use Mock (not AsyncMock) because Settings is not async
     with patch("app.core.health.get_settings") as mock_get_settings:
-        mock_settings = AsyncMock()
+        mock_settings = Mock()
         mock_settings.environment = "test"
         mock_get_settings.return_value = mock_settings
 
