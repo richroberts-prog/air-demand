@@ -1,0 +1,127 @@
+{# Table row for digest email - includes qualification tier, no trend column #}
+<tr>
+  {# Score (combined) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% include 'partials/_score_cell.html' with context %}
+  </td>
+
+  {# Qualification Tier #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% if role.qualification_tier == 'QUALIFIED' %}
+      <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; background: #dcfce7; color: #166534;">✓</span>
+    {% elif role.qualification_tier == 'MAYBE' %}
+      <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; background: #fef3c7; color: #92400e;">?</span>
+    {% elif role.qualification_tier == 'SKIP' %}
+      <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; background: #fee2e2; color: #991b1b;">✗</span>
+    {% else %}
+      —
+    {% endif %}
+  </td>
+
+  {# Company #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; vertical-align: middle;">
+    <span style="font-weight: 500; color: #111827;">{{ role.company_name[:22] }}</span>
+  </td>
+
+  {# Role (with link) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; vertical-align: middle;">
+    <a href="{{ role.paraform_url }}" style="color: #2563eb; text-decoration: none; font-weight: 500;">
+      {{ role.role_types | format_role_type }}
+    </a>
+    {# Show disqualification category for SKIP tier (compact) #}
+    {% if role.qualification_tier == 'SKIP' and role.disqualification_reasons %}
+      {% set category = role.disqualification_reasons | dq_category %}
+      {% if category %}
+        <span style="color: #ef4444; font-size: 10px; font-weight: 600; margin-left: 4px;">· {{ category }}</span>
+      {% endif %}
+    {% endif %}
+  </td>
+
+  {# Location #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; vertical-align: middle;">
+    {% set locations = role.raw_response.locations | default([]) %}
+    {% set workplace = role.raw_response.workplace_type | default(none) %}
+    <span style="color: #6b7280; font-size: 11px;">{{ locations | format_location(workplace) }}</span>
+  </td>
+
+  {# Posted date #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% set posted_at = role.raw_response.posted_at | default(none) %}
+    {% if posted_at %}
+      {{ posted_at | format_date_short }}
+    {% else %}
+      —
+    {% endif %}
+  </td>
+
+  {# Salary ($K) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: right; vertical-align: middle;">
+    {{ role.salary_lower | format_salary(role.salary_upper) }}
+  </td>
+
+  {# Fee (%) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: right; vertical-align: middle;">
+    {% set fee = role.raw_response.percent_fee | default(none) %}
+    {{ fee | format_fee }}
+  </td>
+
+  {# Hiring count (#) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% set hiring = role.raw_response.hiring_count | default(none) %}
+    {{ hiring | format_hiring }}
+  </td>
+
+  {# Raised ($M) #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: right; vertical-align: middle;">
+    {% set company = role.raw_response.company | default({}) %}
+    {% set funding_str = company.fundingAmount | default(none) %}
+    {{ funding_str | format_funding }}
+  </td>
+
+  {# Investors badge #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; vertical-align: middle;">
+    {% set investors = role.raw_response.investors | default([]) %}
+    {% include 'partials/_investor_badge.html' %}
+  </td>
+
+  {# Stage #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% set company = role.raw_response.company | default({}) %}
+    {% set company_meta = company.company_metadata | default({}) %}
+    {% set stage = company_meta.last_funding_round | default(none) %}
+    {% if stage %}
+      {% set stage_short = stage | format_stage %}
+      {# Color code by stage #}
+      {% if stage.upper() == 'PRE_SEED' %}
+        {% set color_style = 'background: #fef3c7; color: #92400e;' %}
+      {% elif stage.upper() == 'SEED' %}
+        {% set color_style = 'background: #dcfce7; color: #166534;' %}
+      {% elif stage.upper() == 'SERIES_A' %}
+        {% set color_style = 'background: #dbeafe; color: #1e40af;' %}
+      {% elif stage.upper() == 'SERIES_B' %}
+        {% set color_style = 'background: #e0e7ff; color: #3730a3;' %}
+      {% elif stage.upper() == 'SERIES_C' %}
+        {% set color_style = 'background: #ede9fe; color: #5b21b6;' %}
+      {% elif stage.upper() == 'SERIES_D' %}
+        {% set color_style = 'background: #fae8ff; color: #86198f;' %}
+      {% else %}
+        {% set color_style = 'background: #f3f4f6; color: #4b5563;' %}
+      {% endif %}
+      <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; {{ color_style }}">{{ stage_short }}</span>
+    {% else %}
+      —
+    {% endif %}
+  </td>
+
+  {# Engineer score #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% set score = role.engineer_score %}
+    {% include 'partials/_score_cell.html' %}
+  </td>
+
+  {# Headhunter score #}
+  <td style="padding: 10px 6px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle;">
+    {% set score = role.headhunter_score %}
+    {% include 'partials/_score_cell.html' %}
+  </td>
+</tr>

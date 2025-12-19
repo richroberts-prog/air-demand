@@ -14,8 +14,6 @@ Event Naming Pattern:
         - request.http_received
         - database.connection_initialized
         - agent.tool.execution_started
-
-    See docs/logging-standard.md for complete taxonomy.
 """
 
 import logging
@@ -53,9 +51,7 @@ def set_request_id(request_id: str | None = None) -> str:
     return request_id
 
 
-def add_request_id(
-    _logger: WrappedLogger, _method_name: str, event_dict: EventDict
-) -> EventDict:
+def add_request_id(_logger: WrappedLogger, _method_name: str, event_dict: EventDict) -> EventDict:
     """Processor to add request ID to all log entries.
 
     Args:
@@ -84,6 +80,8 @@ def setup_logging(log_level: str = "INFO") -> None:
     - Exception formatting with full tracebacks
     - JSON rendering for AI-parseable output
 
+    Also sets up file logging with rotation if enabled in settings.
+
     Args:
         log_level: The logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL).
     """
@@ -106,6 +104,11 @@ def setup_logging(log_level: str = "INFO") -> None:
         logger_factory=structlog.PrintLoggerFactory(),
         cache_logger_on_first_use=True,
     )
+
+    # Setup file logging if enabled
+    from app.core.file_logging import setup_file_logging
+
+    setup_file_logging()
 
 
 def get_logger(name: str) -> WrappedLogger:
@@ -141,7 +144,5 @@ def get_logger(name: str) -> WrappedLogger:
         ...                 username="alice",
         ...                 error="Invalid credentials",
         ...                 exc_info=True)
-
-    See docs/logging-standard.md for complete event taxonomy and guidelines.
     """
     return structlog.get_logger(name)

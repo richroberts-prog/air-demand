@@ -1,0 +1,204 @@
+{
+  "id": "cmbgun7kh003ojy04qauyzr74",
+  "name": "Senior Software Engineer",
+  "createdAt": "2025-06-03T18:25:46.001Z",
+  "status": "ACTIVE",
+  "paraform_owner": {
+    "id": "cm8x60bh1002dl40csy12pzup",
+    "name": "Vivian Xu",
+    "image": "https://lh3.googleusercontent.com/a/ACg8ocKN9zuIgtaqzXljHFyYaQKL1e6q4n8Lf9sT6n8X5okch2_mInc=s96-c"
+  },
+  "company": {
+    "name": "Agentio",
+    "logoUrl": "https://storage.googleapis.com/paraform-company-logo-urls/eabcadaf-59b4-49c3-8e1a-cbdf3d24c4c2",
+    "industries": [
+      "ai",
+      "creator_economy"
+    ],
+    "size": 25,
+    "fundingAmount": "$16.25M",
+    "foundingYear": 2023,
+    "websiteUrl": "https://www.agentio.com",
+    "oneLiner": "The AI-native platform for creator-led advertising \u2014 connecting brands and top creators, scaling trust, performance, and revenue.",
+    "company_metadata": {
+      "paraform_owner": {
+        "id": "cm8x60bh1002dl40csy12pzup",
+        "name": "Vivian Xu",
+        "image": "https://lh3.googleusercontent.com/a/ACg8ocKN9zuIgtaqzXljHFyYaQKL1e6q4n8Lf9sT6n8X5okch2_mInc=s96-c"
+      },
+      "last_funding_round": "SERIES_A"
+    },
+    "team_image_url": "https://storage.googleapis.com/paraform-company-team-image-urls/d250eaee-007a-4ae9-b4aa-6860b2cb8124"
+  },
+  "role_settings": {
+    "max_pending_submissions": 10,
+    "first_submission_reward_enabled": false,
+    "role_timer_enabled": false,
+    "first_submission_reward_amount": 800
+  },
+  "role_boost": {
+    "id": "cmbq0k0tm005eic04u9jocjui",
+    "num_activations": 3,
+    "start_date": "2025-06-10T04:20:00.000Z",
+    "end_date": "2025-06-20T04:20:00.000Z",
+    "application_status": "INTERVIEWING",
+    "bonus_amount": 1800,
+    "a_b_test_enabled": false,
+    "invite_only": false,
+    "role_boost_invitations": []
+  },
+  "role_metadata": {
+    "ai_role_titles": [
+      "Senior Software Engineer",
+      "Lead Software Engineer",
+      "Software Development Engineer",
+      "Senior Software Developer",
+      "Principal Software Engineer",
+      "Senior Application Developer",
+      "Senior Systems Engineer",
+      "Senior Backend Engineer",
+      "Senior Frontend Engineer",
+      "Senior Full Stack Developer",
+      "Software Architect",
+      "Technical Lead",
+      "Software Engineer II",
+      "Senior DevOps Engineer",
+      "Senior Cloud Engineer",
+      "Senior Mobile Developer",
+      "Senior Web Developer",
+      "Senior Software Consultant",
+      "Senior Technical Engineer",
+      "Senior Software Analyst"
+    ],
+    "highlights": [
+      "NO_FINAL_ROUNDS",
+      "HIRING_MULTIPLE",
+      "TRUSTED_CLIENT"
+    ],
+    "posted_at": "2025-06-06T19:38:45.757Z"
+  },
+  "role_timer": false,
+  "is_posted_recently": false,
+  "priority": 69,
+  "manager_rating": 5,
+  "hiring_count": 10,
+  "hiring_count_max": 0,
+  "tech_stack": [
+    "react",
+    "nextjs",
+    "python",
+    "django",
+    "postgresql"
+  ],
+  "locations": [
+    "new_york"
+  ],
+  "role_types": [
+    "full_stack_engineer"
+  ],
+  "investors": [
+    "Benchmark",
+    "Craft Ventures",
+    "AlleyCorp",
+    "cody ko",
+    "Neal Arthur",
+    "Rory Paterson",
+    "Jeff Ragovin",
+    "Steven Galanis",
+    "Permanent Capital",
+    "Elizabeth Cutler",
+    "Antler",
+    "Michael Sugar",
+    "Protagonist"
+  ],
+  "workplace_type": "On-site",
+  "salary_string": "$150K - $225K",
+  "salary_number": 150000,
+  "salaryLowerBound": 150000,
+  "salaryUpperBound": 225000,
+  "currencyType": "USD",
+  "equity": "Competitive",
+  "base_bounty": 263000,
+  "bounty": 0,
+  "bounty_string": "17.5% first year",
+  "retainer": false,
+  "weekly_retainer": false,
+  "percent_fee": 17.5,
+  "feature_flags": {
+    "weekly_checkin": true,
+    "disable_candidate_requirements": true,
+    "disable_open_ended_submissions": true
+  },
+  "yoe_string": "3 - 10 years",
+  "yoe_min": "3",
+  "yoe_max": "10",
+  "yoe_experience": "4-7",
+  "hiring_count_text": "10+",
+  "bonus_string": "bonus",
+  "team_size": 25,
+  "funding": "$16.25M",
+  "founding_year": 2023,
+  "website": "https://www.agentio.com",
+  "visa_text": "Not available",
+  "one_liner": "The AI-native platform for creator-led advertising \u2014 connecting brands and top creators, scaling trust, performance, and revenue.",
+  "interview_stages": 5,
+  "experience_count": 17,
+  "submitted": 0,
+  "total_interviewing": 8,
+  "total_hired": 0,
+  "interviewing": 0,
+  "hired": 0,
+  "applied_for_role": true,
+  "not_accepting_recruiters": true,
+  "user_status": "WITHDRAWN",
+  "user_role_approval": {
+    "id": "cmbrkdu600001jr04ahrsok2b",
+    "created_at": "2025-06-11T06:24:00.504Z",
+    "role_id": "cmbgun7kh003ojy04qauyzr74",
+    "user_id": "cmanjbpmf00h9jw0eg1gp2qyn",
+    "rate": null,
+    "approval_status": "WITHDRAWN",
+    "approval_method": "INVITED",
+    "favourite": false,
+    "last_active": "2025-11-27T19:38:05.115Z",
+    "recruiter_note": "",
+    "approval_access_level": "CROSS_SUBMIT",
+    "is_lead_recruiter": false,
+    "user": {
+      "referrer": {
+        "tags": [
+          "Technical",
+          "AI/ML",
+          "New York",
+          "Early stage",
+          "Marketing & Growth",
+          "Contingency",
+          "Backend Engineer",
+          "Important",
+          "cmfm4ovk1072pl70cblgi9v4i",
+          "Cartier",
+          "Inactive",
+          "Good recruiter"
+        ],
+        "max_role_slots": 6,
+        "recruiter_status": "DEFAULT"
+      }
+    }
+  },
+  "user_request_date": "2025-06-11T06:24:00.504Z",
+  "withdraw_allowed": false,
+  "is_invite": false,
+  "invite_message": null,
+  "invited_at": null,
+  "allow_custom_rate": false,
+  "favourite": false,
+  "recruiter_note": "",
+  "recruiter_last_active": "2025-11-27T19:38:05.115Z",
+  "manager_last_active": "2025-12-04T22:03:12.331Z",
+  "posted_at": "2025-06-06T19:38:45.757Z",
+  "max_capacity": false,
+  "first_submission_reward": false,
+  "responsiveness_days": 0.049516223413671026,
+  "approved_recruiters_count": 0,
+  "hide_from_recruiters": false
+}

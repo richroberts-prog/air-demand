@@ -1,6 +1,7 @@
 """Database configuration and session management."""
 
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -14,8 +15,22 @@ from app.core.config import get_settings
 settings = get_settings()
 
 # Create async engine with connection pooling
+import ssl
+
+# Configure SSL for remote databases
+connect_args = {}
+if any(
+    domain in settings.database_url
+    for domain in ["render.com", "amazonaws.com", "ondigitalocean.com"]
+):
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
+    connect_args = {"ssl": ssl_context}
+
 engine = create_async_engine(
     settings.database_url,
+    connect_args=connect_args,
     pool_pre_ping=True,  # Test connections before using
     pool_size=5,
     max_overflow=10,
@@ -54,5 +69,30 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         try:
             yield session
+        finally:
+            await session.close()
+
+
+@asynccontextmanager
+async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+    """Context manager for database sessions in standalone scripts.
+
+    Handles commit on success and rollback on exception.
+
+    Example:
+        async with get_db_session() as session:
+            result = await session.execute(select(Model))
+            await session.commit()
+
+    Yields:
+        AsyncSession: Database session with auto commit/rollback.
+    """
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
         finally:
             await session.close()

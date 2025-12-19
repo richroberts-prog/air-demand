@@ -1,0 +1,24 @@
+AI Recruiter Digest
+========================================
+{{ total_count }} roles posted in last 24 hours
+
+ROLES POSTED YESTERDAY (sorted by score)
+--------------------
+{% if roles %}
+{% for role in roles %}
+{{ loop.index }}. {{ role.title }} at {{ role.company_name }} ({{ role.qualification_tier }})
+   Score: {{ role.combined_score | format_score }} | {{ role.salary_lower | format_salary(role.salary_upper) }}
+   {% if role.qualification_tier == 'SKIP' and role.disqualification_reasons %}Disqualified: {{ role.disqualification_reasons | join(', ') }}
+   {% endif %}{{ role.paraform_url }}
+
+{% endfor %}
+{% else %}
+No roles posted in last 24 hours.
+{% endif %}
+
+--------------------
+View full dashboard: {{ dashboard_url }}
+
+{% if session_expiry %}
+Session expires: {{ session_expiry.strftime('%Y-%m-%d') }}
+{% endif %}
